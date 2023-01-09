@@ -28,7 +28,7 @@ public class wavespawner : MonoBehaviour
             SpawnEnemy();
         }
         waveNumber++;
-        Debug.Log("Wave incomming!!");
+        Debug.Log($"Wave incomming " + (waveNumber - 1));
     }
     
     void SpawnEnemy()
