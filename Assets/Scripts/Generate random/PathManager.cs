@@ -20,14 +20,26 @@ public class PathManager : MonoBehaviour
     private GameObject holder;
     private bool pathReady = false;
     private bool gridready = false;
+
+
+    IEnumerator CreateGrid(List<Vector2Int> pathCells)
+    {
+        yield return StartCoroutine(LayPathCells(pathCells));
+        yield return StartCoroutine(LaySceneryCells());
+        //print("STARTING NAVMESH BUILDING");
+        GridHolder.SetActive(false);
+        BuildNavMesh();
+        GridHolder.SetActive(true);
+
+    }
     void Start()
     {
         holder = new GameObject("gameObjectHolder");
         GridHolder = new GameObject("gridHolder");
         PathHolder = new GameObject("pathHolder");
-        NavMeshSurfaces = new List<NavMeshSurface> ();
+        NavMeshSurfaces = new List<NavMeshSurface>();
         pathGenerator = new PathGenerator(gridwidth, gridHeight);
-        
+
         List<Vector2Int> pathCells = pathGenerator.GeneratePath();
         int pathSize = pathCells.Count;
         while (pathSize < minPathLength)
@@ -35,24 +47,13 @@ public class PathManager : MonoBehaviour
             pathCells = pathGenerator.GeneratePath();
             pathSize = pathCells.Count;
         }
+        AddNavMeshToGameObject(PathHolder);
         StartCoroutine(CreateGrid(pathCells));
-        //StartCoroutine(LayPathCells(pathCells));
-        //LaySceneryCells();
         PathHolder.transform.parent = holder.transform;
         GridHolder.transform.parent = holder.transform;
 
-        AddNavMeshToGameObject(PathHolder);
-        StartCoroutine(navmeshmaker());
     }
 
-    private void AddNavMeshToGameObject(GameObject GO)
-    {
-        GameObjectUtility.SetStaticEditorFlags(GO, StaticEditorFlags.NavigationStatic);
-        //GO.isStatic = true;
-        GO.AddComponent<NavMeshSurface>();
-        //GO.GetComponent<NavMeshSurface>().
-        NavMeshSurfaces.Add(GO.GetComponent<NavMeshSurface>());
-    }
 
     private void BuildNavMesh()
     {
@@ -68,45 +69,28 @@ public class PathManager : MonoBehaviour
                     if (!filter.sharedMesh.isReadable)
                     {
                         pass = true;
-                        
+
                     }
                 }
             }
             if (!pass)
             {
-                Debug.Log("if surface.built");
+                //Debug.Log("if surface.built");
                 surface.BuildNavMesh();
             }
         }
     }
-
-    private IEnumerator navmeshmaker()
+    private void AddNavMeshToGameObject(GameObject GO)
     {
-        while (!pathReady && !gridready)
-        {
-            yield return null;
-        } 
-        BuildNavMesh();
-    }
-    IEnumerator CreateGrid(List<Vector2Int> pathCells)
-    {
-        yield return LayPathCells(pathCells);
-        yield return LaySceneryCells();
+        GameObjectUtility.SetStaticEditorFlags(GO, StaticEditorFlags.NavigationStatic);
+        GO.AddComponent<NavMeshSurface>();
+        NavMeshSurfaces.Add(GO.GetComponent<NavMeshSurface>());
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        BuildNavMesh();
-    //        print($"Navmesh built!");
-    //    }
-    //}
 
     private IEnumerator LayPathCells(List<Vector2Int> pathCells)
     {
-        PathHolder.transform.position = new Vector3(pathCells[1].x,0,pathCells[1].y);
-        bool NavMeshGiven = false;
+        //PathHolder.transform.position = new Vector3(pathCells[1].x,0,pathCells[1].y);
         foreach (Vector2Int pathCell in pathCells)
         {
             int neighbourValue = pathGenerator.getCellNeighbourValue(pathCell.x, pathCell.y);
@@ -117,31 +101,24 @@ public class PathManager : MonoBehaviour
             pathTileCell.isStatic = true;
             yield return new WaitForSeconds(0.0f);
         }
-
-        Debug.Log("eind laypathcells");
-        //BuildNavMesh();
-        Debug.Log("na buildNavMesh");
-        pathReady = true;
         yield return null;
     }
 
     IEnumerator LaySceneryCells()
-    { 
+    {
         //Debug.Log("!!!Dit wordt aangeroepen!!!");
         for (int x = 0; x < gridwidth; x++)
         {
-            for (int  y = 0;  y < gridHeight;  y++)
+            for (int y = 0; y < gridHeight; y++)
             {
                 if (pathGenerator.CellIsEmpty(x, y))
                 {
                     int randomSceneryCellIndex = Random.Range(0, sceneryCells.Length);
                     Instantiate(sceneryCells[randomSceneryCellIndex].cellPrefab, new Vector3(x, 0f, y), Quaternion.identity, GridHolder.transform);
-                    yield return new WaitForSeconds(0.01f);
+                    yield return new WaitForSeconds(0.0f);
                 }
             }
         }
-        Debug.Log("eind layscenerycells");
-        gridready = true;
         yield return null;
     }
 }
