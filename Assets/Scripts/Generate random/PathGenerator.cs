@@ -7,15 +7,18 @@ public class PathGenerator : MonoBehaviour
 {
     private int height, width;
     private List<Vector2Int> pathCells;
-    public PathGenerator(int width, int height)
+    private int seed;
+    public PathGenerator(int width, int height, int seed)
     {
         this.width = width;
         this.height = height;
+        this.seed = seed;
     }
 
     public List<Vector2Int> GeneratePath()
     {
         pathCells = new List<Vector2Int>();
+        Random.InitState(seed);
         int y = (int)(height / 2);
         int x = 0;
 

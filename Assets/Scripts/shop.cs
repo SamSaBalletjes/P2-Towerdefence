@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class shop : MonoBehaviour { 
+public class shop : MonoBehaviour 
+{ 
 
     BuildManager buildManager;
     private void Start()
@@ -12,7 +13,15 @@ public class shop : MonoBehaviour {
 
     public void PurchaseStandardTurret()
     {
-        Debug.Log("Standard turret purchase");
-        buildManager.SetTurretToBuild(buildManager.standardTurretPrefab);
+        if (goedAntwoord.coinsGathered > 0)
+        {
+            buildManager.placeTurret();
+            goedAntwoord.coinsGathered -= 1;
+            print(goedAntwoord.coinsGathered);
+        }
+        else
+        {
+            print("No more Coins to buy!");
+        }
     }
 }

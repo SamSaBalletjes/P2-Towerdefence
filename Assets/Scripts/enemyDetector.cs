@@ -20,22 +20,15 @@ public class enemyDetector : MonoBehaviour
         timer = 0.00f;
     }
 
-    private void Start()
-    {
-        //InvokeRepeating("OnTriggerStay", 5, 5);
-    }
-
-    //private void OnTriggerStay(Collider other)
-    //{
-    //    //print("dit werkt");
-    //    towerTop.LookAt(enemy);
-    //    Vector3 position = bulletShooter.position;
-    //    Instantiate(bullet, position, Quaternion.identity);
-
-    //}enemies[0].transform + enemies[0].transform.forward
-
     private void Update()
     {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemies[i] == null)
+            {
+                enemies.RemoveAt(i);
+            }
+        }
         if (enemies.Count > 0)
         {
             if (enemies[0] != null)
@@ -46,11 +39,13 @@ public class enemyDetector : MonoBehaviour
                     position = bulletShooter.position;
                     Quaternion rotation = bullet.transform.rotation;
                     GameObject ball = Instantiate(bullet, position, Quaternion.identity);
+                    Destroy(ball,0.2f);
                     ball.transform.parent = transform;
-                    ball.transform.LookAt(enemies[0].transform.position + (enemies[0].transform.forward * 5));
+                    ball.transform.LookAt(enemies[0].transform.position);
                     Rigidbody bulletBody = ball.GetComponent<Rigidbody>();
                     bulletBody.AddForce(ball.transform.forward * firePower, ForceMode.Impulse);
                     timer = 0.00f;
+                    
                 }
             }
             
@@ -66,7 +61,6 @@ public class enemyDetector : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            print($"{other.gameObject} has entered the area");
             enemies.Add(other.gameObject);
         }
     }
@@ -75,7 +69,6 @@ public class enemyDetector : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             enemies.Remove(other.gameObject);
-            print($"{other.gameObject} has left the area");
         }
     }
 }

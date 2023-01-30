@@ -474,7 +474,7 @@ GameObject:
   - component: {fileID: 183550000}
   - component: {fileID: 183550003}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -602,8 +602,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e39e34e2a8dce04f9efbc4e64abb6b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridwidth: 32
-  gridHeight: 8
+  gridwidth: 100
+  gridHeight: 100
   minPathLength: 16
   gridCells:
   - {fileID: 11400000, guid: c106ae44bc68e5f49abbbd2874540aa6, type: 2}
@@ -662,9 +662,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef54f5d0c201c854997e3a4ee96125f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  standardTurretPrefab: {fileID: 1181920149425672135, guid: 3a82c4482d5aa814281441bfcb475ce0, type: 3}
-  secondTurretPrefab: {fileID: 0}
-  turretToBuild: {fileID: 0}
+  PlayerCamera: {fileID: 183550001}
+  standardTurretPrefab: {fileID: 165880, guid: f4f6b630159e6b34386dec2579f250b2, type: 3}
 --- !u!1001 &1024524499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -894,7 +893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 432963919430673723, guid: 9933e87f3dbe5fe49b48a69da3dddda6, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 432963919430673724, guid: 9933e87f3dbe5fe49b48a69da3dddda6, type: 3}
       propertyPath: healthText

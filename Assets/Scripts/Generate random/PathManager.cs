@@ -20,7 +20,7 @@ public class PathManager : MonoBehaviour
     private GameObject holder;
     private bool pathReady = false;
     private bool gridready = false;
-
+    private BuildManager buildManager;
 
     IEnumerator CreateGrid(List<Vector2Int> pathCells)
     {
@@ -30,15 +30,21 @@ public class PathManager : MonoBehaviour
         GridHolder.SetActive(false);
         BuildNavMesh();
         GridHolder.SetActive(true);
-
+        buildManager.placeTurret();
     }
     void Start()
     {
+        buildManager = gameObject.GetComponent<BuildManager>();
+        if (buildManager == null)
+        {
+            print("Buildmanager is null");
+        }
+        buildManager.tileArray = new Tile[gridwidth, gridHeight];
         holder = new GameObject("gameObjectHolder");
         GridHolder = new GameObject("gridHolder");
         PathHolder = new GameObject("pathHolder");
         NavMeshSurfaces = new List<NavMeshSurface>();
-        pathGenerator = new PathGenerator(gridwidth, gridHeight);
+        pathGenerator = new PathGenerator(gridwidth, gridHeight, 60);
 
         List<Vector2Int> pathCells = pathGenerator.GeneratePath();
         int pathSize = pathCells.Count;
@@ -46,6 +52,15 @@ public class PathManager : MonoBehaviour
         {
             pathCells = pathGenerator.GeneratePath();
             pathSize = pathCells.Count;
+        }
+        foreach (Vector2Int pathCell in pathCells)
+        {
+            buildManager.tileArray[pathCell.x, pathCell.y] = new Tile();
+            buildManager.tileArray[pathCell.x, pathCell.y].isbuildable = false;
+            buildManager.tileArray[pathCell.x, pathCell.y].tileType = 1;
+            buildManager.tileArray[pathCell.x, pathCell.y].xarrayposition = pathCell.x;
+            buildManager.tileArray[pathCell.x, pathCell.y].yarrayposition = pathCell.y;
+            buildManager.tileArray[pathCell.x, pathCell.y].worldPosition = new Vector3(pathCell.x, 0f, pathCell.y);
         }
         AddNavMeshToGameObject(PathHolder);
         StartCoroutine(CreateGrid(pathCells));
@@ -114,7 +129,14 @@ public class PathManager : MonoBehaviour
                 if (pathGenerator.CellIsEmpty(x, y))
                 {
                     int randomSceneryCellIndex = Random.Range(0, sceneryCells.Length);
-                    Instantiate(sceneryCells[randomSceneryCellIndex].cellPrefab, new Vector3(x, 0f, y), Quaternion.identity, GridHolder.transform);
+                    GameObject groundPrefab = Instantiate(sceneryCells[randomSceneryCellIndex].cellPrefab, new Vector3(x, 0f, y), Quaternion.identity, GridHolder.transform);
+                    buildManager.tileArray[x, y] = new Tile();
+                    buildManager.tileArray[x, y].groundPrefab = groundPrefab;
+                    buildManager.tileArray[x, y].isbuildable = true;
+                    buildManager.tileArray[x, y].tileType = 0;
+                    buildManager.tileArray[x, y].xarrayposition = x;
+                    buildManager.tileArray[x, y].yarrayposition = y;
+                    buildManager.tileArray[x, y].worldPosition = new Vector3(x, 0f, y);
                     yield return new WaitForSeconds(0.0f);
                 }
             }

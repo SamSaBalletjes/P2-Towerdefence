@@ -13,9 +13,9 @@ public class HealthScript : MonoBehaviour
     {
         if (other.CompareTag("Enemy") == true)
         {
-            print($"Totalhealth = " + TotalHealth);
+            //print($"Totalhealth = " + TotalHealth);
             TotalHealth = TotalHealth - 1;
-            print($"Totalhealth = " + TotalHealth);
+            //print($"Totalhealth = " + TotalHealth);
             Destroy(other.gameObject);
             healthText.SetText("Health: " + TotalHealth);
 
