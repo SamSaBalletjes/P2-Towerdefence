@@ -12,6 +12,7 @@ public class PathManager : MonoBehaviour
     public int gridwidth = 16;
     public int gridHeight = 8;
     public int minPathLength = 30;
+    public int pathSeed = 6;
     public GridCellObject[] gridCells;
     public GridCellObject[] sceneryCells;
     private GameObject PathHolder;
@@ -44,7 +45,7 @@ public class PathManager : MonoBehaviour
         GridHolder = new GameObject("gridHolder");
         PathHolder = new GameObject("pathHolder");
         NavMeshSurfaces = new List<NavMeshSurface>();
-        pathGenerator = new PathGenerator(gridwidth, gridHeight, 60);
+        pathGenerator = new PathGenerator(gridwidth, gridHeight, pathSeed);
 
         List<Vector2Int> pathCells = pathGenerator.GeneratePath();
         int pathSize = pathCells.Count;

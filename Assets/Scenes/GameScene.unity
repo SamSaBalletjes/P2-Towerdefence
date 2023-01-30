@@ -602,9 +602,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e39e34e2a8dce04f9efbc4e64abb6b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridwidth: 100
-  gridHeight: 100
+  gridwidth: 18
+  gridHeight: 8
   minPathLength: 16
+  pathSeed: 12
   gridCells:
   - {fileID: 11400000, guid: c106ae44bc68e5f49abbbd2874540aa6, type: 2}
   - {fileID: 11400000, guid: c106ae44bc68e5f49abbbd2874540aa6, type: 2}
